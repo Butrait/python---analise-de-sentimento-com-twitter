@@ -227,3 +227,26 @@ def calcularPercentualTotal(df):
     print("Número de seguros: {0} ({1:2.2f}%)".format(numero_seguros, (numero_seguros/(numero_inseguros+numero_seguros+numero_neutros))*100))
     print("Número de nêutros: {0} ({1:2.2f}%)".format(numero_neutros, (numero_neutros/(numero_inseguros+numero_seguros+numero_neutros))*100))
 
+
+def classificar3(df):
+    
+    #classificação com algoritmo SVM
+    textos=df['texto'].values
+    sentimento=df['sentimento'].values
+    
+    #a linha abaixo traz o vetor de 1 palavra
+    vectorizer = CountVectorizer(analyzer="word")
+    
+    #Já esta abaixo, tráz de 2 em 2 palavras. Obs, o resultado desta foi melhor
+    #vectorizer = CountVectorizer(ngram_range=(1,2))
+    
+    freqWords = vectorizer.fit_transform(textos)
+    
+    modelo = tree.DecisionTreeClassifier()
+    cl = modelo.fit(freqWords, sentimento)
+    
+    texto=['estou com muito medo da violência']
+    
+    freq_testes = vectorizer.transform(texto)
+    print(cl.predict(freq_testes))
+    #falta imprimir a acuracia
